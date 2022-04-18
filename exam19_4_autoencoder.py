@@ -4,6 +4,9 @@ from tensorflow.keras.models import *
 from tensorflow.keras.layers import *
 from tensorflow.keras.datasets import mnist
 
+from exam19_3_autoencoder import conv_x_test_nosiy
+# 3번에서 잡음을 주니까 해상도가 많이 내려가서 에초에 모델을 잡음을 준 데이터로 학습시킴
+
 input_img = Input(shape=(28, 28, 1))
 x = Conv2D(16, (3, 3), activation='relu',
            padding='same')(input_img)           # 28 * 28
@@ -20,6 +23,7 @@ x = Conv2D(8, (3, 3), activation='relu',
 x = UpSampling2D((2, 2))(x)                     # 8 * 8
 x = Conv2D(8, (3, 3), activation='relu',
            padding='same')(x)                    # 8 * 8
+
 x = UpSampling2D((2, 2))(x)                     # 16 * 16
 x = Conv2D(16, (3, 3), activation='relu')(x)    # 14 * 14
 x = UpSampling2D((2, 2))(x)                     # 28 * 28
@@ -44,20 +48,20 @@ print(conv_x_train.shape)
 print(conv_x_test.shape)
 
 noise_factor = 0.5
-conv_x_train_nosiy = conv_x_train + np.random.normal(
+conv_x_train_noisy = conv_x_train + np.random.normal(
     loc=0.0, scale=1.0, size=conv_x_train.shape) * noise_factor
-conv_x_train_noisy = np.clip(conv_x_train_nosiy, 0.0, 1.0)
+conv_x_train_noisy = np.clip(conv_x_train_noisy, 0.0, 1.0)
 
-conv_x_test_nosiy = conv_x_test + np.random.normal(
+conv_x_test_noisy = conv_x_test + np.random.normal(
     loc=0.0, scale=1.0, size=conv_x_test.shape) * noise_factor
-conv_x_test_noisy = np.clip(conv_x_test_nosiy, 0.0, 1.0)
+conv_x_test_noisy = np.clip(conv_x_test_noisy, 0.0, 1.0)
 
 fit_hist = autoencoder.fit(
     conv_x_train_noisy, conv_x_train,
     epochs=100, batch_size=256,
-    validation_data=(conv_x_test, conv_x_test))
+    validation_data=(conv_x_test_noisy, conv_x_test))
 
-decoded_img = autoencoder.predict(conv_x_test_nosiy[:10])
+decoded_img = autoencoder.predict(conv_x_test_noisy[:10])
 
 n = 10
 
