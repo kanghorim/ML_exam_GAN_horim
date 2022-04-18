@@ -4,7 +4,7 @@ from tensorflow.keras.models import *
 from tensorflow.keras.layers import *
 from tensorflow.keras.datasets import mnist
 
-from exam19_3_autoencoder import conv_x_test_nosiy
+
 # 3번에서 잡음을 주니까 해상도가 많이 내려가서 에초에 모델을 잡음을 준 데이터로 학습시킴
 
 input_img = Input(shape=(28, 28, 1))
