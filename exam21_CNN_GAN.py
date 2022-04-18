@@ -15,7 +15,7 @@ sample_interval = 100
 (X_train, _), (_, _) = mnist.load_data()
 print(X_train.shape)
 
-X_train = X_train / 250
+X_train = X_train / 127.5 - 1
 X_train = np.expand_dims(X_train, axis=3)
 print(X_train.shape)
 
@@ -48,10 +48,6 @@ discriminator.add(Conv2D(64, kernel_size=3,
 discriminator.add(LeakyReLU(alpha=0.01))
 # 한층 더쌓기 2
 discriminator.add(Conv2D(128, kernel_size=3,
-        strides=2, padding='same'))
-discriminator.add(LeakyReLU(alpha=0.01))
-
-discriminator.add(Conv2D(256, kernel_size=3,
         strides=2, padding='same'))
 discriminator.add(LeakyReLU(alpha=0.01))
 
